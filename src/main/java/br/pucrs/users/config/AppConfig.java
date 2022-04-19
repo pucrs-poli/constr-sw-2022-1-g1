@@ -19,4 +19,16 @@ public class AppConfig {
 
     @Value("${keycloak.client-secret}")
     private String clientSecret;
+
+    @Value("${}")
+    private String keyCloakUsername;
+
+    @Value("${}")
+    private String serverUrl;
+
+    @Value("${}")
+    private String realm;
+
+    @Value("${}")
+    private String keyCloakPassword;
 }

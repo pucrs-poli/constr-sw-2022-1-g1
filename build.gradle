@@ -29,6 +29,10 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	// https://mvnrepository.com/artifact/org.keycloak/keycloak-admin-client
+	implementation group: 'org.keycloak', name: 'keycloak-admin-client', version: '17.0.1'
+	// https://mvnrepository.com/artifact/org.keycloak/keycloak-core
+	implementation group: 'org.keycloak', name: 'keycloak-core', version: '17.0.1'
 }
 
 dependencyManagement {
