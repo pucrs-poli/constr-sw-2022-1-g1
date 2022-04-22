@@ -1,18 +1,18 @@
 package br.pucrs.users.config;
 
 import lombok.Getter;
+import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.KeycloakBuilder;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @Getter
 public class AppConfig {
 
-    @Value("${keycloak.logout}")
-    private String keycloakLogout;
-
-    @Value("${keycloak.user-info-uri}")
-    private String keycloakUserInfo;
+    @Value("${keycloak.authorization-grant-type}")
+    private String keycloakGrantType;
 
     @Value("${keycloak.client-id}")
     private String clientId;
@@ -20,15 +20,28 @@ public class AppConfig {
     @Value("${keycloak.client-secret}")
     private String clientSecret;
 
-    @Value("${}")
+    @Value("${keycloak.admin.username}")
     private String keyCloakUsername;
 
-    @Value("${}")
+    @Value("${keycloak.admin.password}")
+    private String keyCloakPassword;
+
+    @Value("${keycloak.server-url}")
     private String serverUrl;
 
-    @Value("${}")
+    @Value("${keycloak.realm}")
     private String realm;
 
-    @Value("${}")
-    private String keyCloakPassword;
+    @Bean
+    public Keycloak keycloak() {
+        return KeycloakBuilder.builder()
+                .serverUrl(serverUrl)
+                .realm(realm)
+                .clientId(clientId)
+                .clientSecret(clientSecret)
+                .grantType(keycloakGrantType)
+                .username(keyCloakUsername)
+                .password(keyCloakPassword)
+                .build();
+    }
 }

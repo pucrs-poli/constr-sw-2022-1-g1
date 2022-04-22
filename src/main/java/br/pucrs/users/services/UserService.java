@@ -11,10 +11,6 @@ public class UserService {
     @Autowired
     private KeyCloakConnection keyCloakConnection;
 
-    public void logout(String refreshToken) throws Exception {
-        keyCloakConnection.logout(refreshToken);
-    }
-
     public void createUser(User user) {
         keyCloakConnection.createUser(user);
     }

@@ -25,20 +25,22 @@ ext {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	//implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	// https://mvnrepository.com/artifact/org.keycloak/keycloak-admin-client
 	implementation group: 'org.keycloak', name: 'keycloak-admin-client', version: '17.0.1'
-	// https://mvnrepository.com/artifact/org.keycloak/keycloak-core
-	implementation group: 'org.keycloak', name: 'keycloak-core', version: '17.0.1'
+	implementation group: 'com.h2database', name: 'h2', version: '2.1.212'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.6.6'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.6.6'
+	// https://mvnrepository.com/artifact/org.keycloak/keycloak-spring-boot-starter
+	implementation group: 'org.keycloak', name: 'keycloak-spring-boot-starter', version: '17.0.1'
+	implementation group: 'org.keycloak.bom', name: 'keycloak-adapter-bom', version: '17.0.1', ext: 'pom'
 }
 
 dependencyManagement {
 	imports {
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-	}
+		}
 }
 
 tasks.named('test') {
