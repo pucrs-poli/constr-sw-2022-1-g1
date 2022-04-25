@@ -26,8 +26,8 @@ public class KeyCloakConnection {
     }
 
     public Response createUser(final User request) {
-        CredentialRepresentation password = preparePasswordRepresentation(request.getPassword());
-        UserRepresentation user = prepareUserRepresentation(request, password);
+        CredentialRepresentation password = configUser(request.getPassword());
+        UserRepresentation user = configPassword(request, password);
         return keycloak.realm(appConfig.getRealm()).users().create(user);
     }
 
@@ -38,8 +38,8 @@ public class KeyCloakConnection {
 
     public void updatePassword(final User request, final String id) {
         UserRepresentation userRepresentation = keycloak.realm(appConfig.getRealm()).users().get(id).toRepresentation();
-        CredentialRepresentation password = preparePasswordRepresentation(request.getPassword());
-        UserRepresentation user = prepareUserRepresentation(request, password);
+        CredentialRepresentation password = configUser(request.getPassword());
+        UserRepresentation user = configPassword(request, password);
         user.setCredentials(List.of(password));
     }
 
@@ -47,11 +47,7 @@ public class KeyCloakConnection {
         return keycloak.realm(appConfig.getRealm()).users().get(id).toRepresentation();
     }
 
-    public List<UserRepresentation> findUserByParams(final String username, final String firstname, final String lastname, final String email, final Integer first) {
-        return keycloak.realm(appConfig.getRealm()).users().search(username, firstname, lastname, email, first, null);
-    }
-
-    private CredentialRepresentation preparePasswordRepresentation(String password) {
+    private CredentialRepresentation configUser(String password) {
         CredentialRepresentation cR = new CredentialRepresentation();
         cR.setTemporary(false);
         cR.setType(CredentialRepresentation.PASSWORD);
@@ -59,7 +55,7 @@ public class KeyCloakConnection {
         return cR;
     }
 
-    private UserRepresentation prepareUserRepresentation(User request, CredentialRepresentation cR) {
+    private UserRepresentation configPassword(User request, CredentialRepresentation cR) {
         UserRepresentation newUser = new UserRepresentation();
         newUser.setUsername(request.getUsername());
         newUser.setCredentials(List.of(cR));
