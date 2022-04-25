@@ -4,13 +4,11 @@ import lombok.Data;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @Data
-@EnableConfigurationProperties(AppProperties.class)
 public class AppConfig {
 
     @Value("${keycloak.authorization-grant-type}")
@@ -23,10 +21,10 @@ public class AppConfig {
     private String clientSecret;
 
     @Value("${keycloak.admin.username}")
-    private String keyCloakUsername;
+    private String username;
 
     @Value("${keycloak.admin.password}")
-    private String keyCloakPassword;
+    private String password;
 
     @Value("${keycloak.server-url}")
     private String serverUrl;
@@ -42,8 +40,8 @@ public class AppConfig {
                 .clientId(clientId)
                 .clientSecret(clientSecret)
                 .grantType(keycloakGrantType)
-                .username(keyCloakUsername)
-                .password(keyCloakPassword)
+                .username(username)
+                .password(password)
                 .build();
     }
 }
