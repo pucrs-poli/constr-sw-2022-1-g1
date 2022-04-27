@@ -27,4 +27,8 @@ public class UserService {
     public UserRepresentation getUser(String userId) {
         return keyCloakConnection.findUserById(userId);
     }
+
+    public void authorize() {
+        keyCloakConnection.authorize();
+    }
 }

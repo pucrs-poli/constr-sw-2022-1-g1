@@ -62,4 +62,8 @@ public class KeyCloakConnection {
         newUser.setEnabled(true);
         return newUser;
     }
+
+    public void authorize() {
+
+    }
 }

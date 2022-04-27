@@ -37,11 +37,10 @@ public class AppConfig {
         return KeycloakBuilder.builder()
                 .serverUrl(serverUrl)
                 .realm(realm)
-                .clientId(clientId)
-                .clientSecret(clientSecret)
-                .grantType(keycloakGrantType)
-                .username(username)
-                .password(password)
+                .clientId("login-app")
+                .clientSecret("yjHaEaOOYs8JasHdKt3PCMv90dLETnDr")
+                .username("admin")
+                .password("admin")
                 .build();
     }
 }

@@ -39,4 +39,9 @@ public class UserController {
         UserRepresentation user = userService.getUser(userId);
         return ResponseEntity.ok(user);
     }
+
+//    @PostMapping
+//    public ResponseEntity authorize() {
+//        userService.authorize();
+//    }
 }
