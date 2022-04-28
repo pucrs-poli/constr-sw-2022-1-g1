@@ -2,13 +2,13 @@ package br.pucrs.users.controllers;
 
 import br.pucrs.users.models.User;
 import br.pucrs.users.services.UserService;
-import lombok.Getter;
-import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Controller
 public class UserController {
@@ -16,32 +16,27 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping(path = "/{realm}/users", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createUser(@RequestBody User user) {
-        userService.createUser(user);
-        return ResponseEntity.ok().build();
+
+    @RequestMapping(
+            value = "/users", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public ResponseEntity<Void> createUser(@RequestBody User user, @RequestHeader String Authorization) {
+        if (Authorization.isEmpty())
+            return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+
+        try {
+            userService.createUser(user, Authorization);
+        } catch (HttpClientErrorException.Unauthorized unauthorized) {
+            return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
+        } catch (HttpClientErrorException.Conflict conflict) {
+            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
-    @DeleteMapping(path = "/{realm}/users/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity deleteUser(@PathVariable String userId) {
-        userService.deleteUser(userId);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PatchMapping(path = "/{realm}/users", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateUser(@RequestBody User user) {
-        userService.updateUser(user);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping(path = "/{realm}/users/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserRepresentation> getUser(@PathVariable String userId) {
-        UserRepresentation user = userService.getUser(userId);
-        return ResponseEntity.ok(user);
-    }
-
-//    @PostMapping
-//    public ResponseEntity authorize() {
-//        userService.authorize();
-//    }
 }
