@@ -1,16 +1,16 @@
 package br.pucrs.users.services;
 
+import br.pucrs.users.models.DTO.PasswordDTO;
+import br.pucrs.users.models.PasswordUpdate;
+import br.pucrs.users.models.UserWID;
 import br.pucrs.users.models.User;
 import br.pucrs.users.utils.Constants;
+import br.pucrs.users.utils.HttpModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Collections;
 
 @Service
 @AllArgsConstructor
@@ -22,18 +22,55 @@ public class UserService {
     @Autowired
     private RestTemplate restTemplate;
 
-    public void createUser(User user, String Authorization) throws Exception {
+    public void createUser(User user, String Authorization) {
         String url = constants.serverUrl + "/admin/realms/" + constants.realm + "/users";
-        restTemplate.postForEntity(url, entity(user, MediaType.APPLICATION_JSON, Authorization), String.class);
+        restTemplate.postForEntity(url, HttpModel.entity(user, MediaType.APPLICATION_JSON, Authorization), String.class);
     }
 
-    public static HttpEntity entity(Object object, MediaType midiaType, String Authorization) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(Authorization.split(" ")[1]);
-        headers.setContentType(midiaType);
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    public UserWID[] listUser(String Authorization) {
+        String url = constants.serverUrl + "/admin/realms/" + constants.realm + "/users";
 
-        return new HttpEntity (object, headers);
+        return restTemplate.exchange(
+            url,
+            HttpMethod.GET,
+            HttpModel.entity(null, MediaType.APPLICATION_JSON, Authorization),
+            UserWID[].class
+        ).getBody();
+    }
+
+    public User getUser(String id, String Authorization) {
+        String url = constants.serverUrl + "/admin/realms/" + constants.realm + "/users/" + id;
+
+        return restTemplate.exchange(
+            url,
+            HttpMethod.GET,
+            HttpModel.entity(null, MediaType.APPLICATION_JSON, Authorization),
+            User.class
+        ).getBody();
+    }
+
+    public void updateUser(String id, User user, String Authorization) {
+        String url = constants.serverUrl + "/admin/realms/" + constants.realm + "/users/" + id;
+
+        restTemplate.exchange(
+            url,
+            HttpMethod.PUT,
+            HttpModel.entity(user, MediaType.APPLICATION_JSON, Authorization),
+            String.class
+        );
+
+    }
+
+    public void updatePassword(String id, PasswordDTO password, String Authorization) {
+        String url = constants.serverUrl + "/admin/realms/" + constants.realm + "/users/" + id + "/reset-password";
+        PasswordUpdate passwordUpdate = new PasswordUpdate(password.getPassword());
+
+        restTemplate.exchange(
+                url,
+                HttpMethod.PUT,
+                HttpModel.entity(passwordUpdate, MediaType.APPLICATION_JSON, Authorization),
+                String.class
+        );
     }
 
 
