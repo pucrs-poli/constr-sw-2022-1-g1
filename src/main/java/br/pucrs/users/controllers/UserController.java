@@ -107,5 +107,15 @@ public class UserController {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
+    @RequestMapping(
+            value = "/users/{id}", method = RequestMethod.DELETE,
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public ResponseEntity<String> deleteUser(
+            @PathVariable("id") String id,
+            @RequestHeader String Authorization
+    ) {
+        Boolean response = userService.deleteUser(id, Authorization);
+        return ResponseEntity.ok(response ? "Deleted" : "Not_Deleted");
+    }
 }

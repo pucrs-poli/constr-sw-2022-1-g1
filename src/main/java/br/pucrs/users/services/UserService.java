@@ -73,5 +73,18 @@ public class UserService {
         );
     }
 
+    public Boolean deleteUser(String id, String Authorization) {
+        Boolean wasDeleted = true;
+        try{
+        User user = getUser(id, Authorization);
+        user.setEnabled(false);
+
+        updateUser(id, user, Authorization);}
+        catch(Exception e){
+            wasDeleted = false;
+        }
+        return wasDeleted;
+    }
+
 
 }
