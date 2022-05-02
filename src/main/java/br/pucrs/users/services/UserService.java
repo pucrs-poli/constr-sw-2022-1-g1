@@ -73,6 +73,7 @@ public class UserService {
         );
     }
 
+
     public Boolean deleteUser(String id, String Authorization) {
         Boolean wasDeleted = true;
         try {
