@@ -1,14 +1,16 @@
 package br.pucrs.users.controllers;
 
+import br.pucrs.users.models.DTO.PasswordDTO;
 import br.pucrs.users.models.User;
+import br.pucrs.users.models.UserWID;
 import br.pucrs.users.services.UserService;
-import lombok.Getter;
-import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Controller
 public class UserController {
@@ -16,32 +18,107 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping(path = "/{realm}/users", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createUser(@RequestBody User user) {
-        userService.createUser(user);
-        return ResponseEntity.ok().build();
+
+    @RequestMapping(
+            value = "/users", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public ResponseEntity<Void> createUser(@RequestBody User user, @RequestHeader String Authorization) {
+        if (Authorization.isEmpty())
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        try {
+            userService.createUser(user, Authorization);
+        } catch (HttpClientErrorException httpError) {
+            return new ResponseEntity<>(httpError.getStatusCode());
+        }
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @DeleteMapping(path = "/{realm}/users/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity deleteUser(@PathVariable String userId) {
-        userService.deleteUser(userId);
-        return ResponseEntity.noContent().build();
+    @RequestMapping(
+            value = "/users", method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public ResponseEntity<UserWID[]> listUser(@RequestHeader String Authorization) {
+        if (Authorization.isEmpty())
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        try {
+            return ResponseEntity.ok(userService.listUser(Authorization));
+        } catch (HttpClientErrorException httpError) {
+            return new ResponseEntity<>(httpError.getStatusCode());
+        }
     }
 
-    @PatchMapping(path = "/{realm}/users", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateUser(@RequestBody User user) {
-        userService.updateUser(user);
-        return ResponseEntity.ok().build();
+    @RequestMapping(
+            value = "/users/{id}", method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public ResponseEntity<User> getUser(@PathVariable("id") String id, @RequestHeader String Authorization) {
+        if (Authorization.isEmpty())
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        try {
+            return ResponseEntity.ok(userService.getUser(id, Authorization));
+
+        } catch (HttpClientErrorException httpError) {
+            return new ResponseEntity<>(httpError.getStatusCode());
+        }
     }
 
-    @GetMapping(path = "/{realm}/users/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserRepresentation> getUser(@PathVariable String userId) {
-        UserRepresentation user = userService.getUser(userId);
-        return ResponseEntity.ok(user);
+    @RequestMapping(
+            value = "/users/{id}", method = RequestMethod.PUT,
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public ResponseEntity<Void> updateUser(
+            @PathVariable("id") String id,
+            @RequestBody User user,
+            @RequestHeader String Authorization
+    ) {
+        if (Authorization.isEmpty())
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        try {
+            userService.updateUser(id, user, Authorization);
+        } catch (HttpClientErrorException httpError) {
+            return new ResponseEntity<>(httpError.getStatusCode());
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-//    @PostMapping
-//    public ResponseEntity authorize() {
-//        userService.authorize();
-//    }
+    @RequestMapping(
+            value = "/users/{id}", method = RequestMethod.PATCH,
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public ResponseEntity<User> updatePassword(
+            @PathVariable("id") String id,
+            @RequestBody PasswordDTO password,
+            @RequestHeader String Authorization
+    ) {
+        if (Authorization.isEmpty())
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        try {
+            userService.updatePassword(id, password, Authorization);
+
+        } catch (HttpClientErrorException httpError) {
+            return new ResponseEntity<>(httpError.getStatusCode());
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @RequestMapping(
+            value = "/users/{id}", method = RequestMethod.DELETE,
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public ResponseEntity<String> deleteUser(
+            @PathVariable("id") String id,
+            @RequestHeader String Authorization
+    ) {
+        Boolean response = userService.deleteUser(id, Authorization);
+        if(response)
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 }

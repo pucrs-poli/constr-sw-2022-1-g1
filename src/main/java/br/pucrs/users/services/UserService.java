@@ -1,34 +1,91 @@
 package br.pucrs.users.services;
 
-import br.pucrs.users.conections.KeyCloakConnection;
+import br.pucrs.users.models.DTO.PasswordDTO;
+import br.pucrs.users.models.PasswordUpdate;
+import br.pucrs.users.models.UserWID;
 import br.pucrs.users.models.User;
-import org.keycloak.representations.idm.UserRepresentation;
+import br.pucrs.users.utils.Constants;
+import br.pucrs.users.utils.HttpModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import lombok.AllArgsConstructor;
+import org.springframework.web.client.RestTemplate;
 
 @Service
+@AllArgsConstructor
 public class UserService {
 
     @Autowired
-    private KeyCloakConnection keyCloakConnection;
+    private Constants constants;
 
-    public void createUser(User user) {
-        keyCloakConnection.createUser(user);
+    @Autowired
+    private RestTemplate restTemplate;
+
+    public void createUser(User user, String Authorization) {
+        String url = constants.serverUrl + "/admin/realms/" + constants.realm + "/users";
+        restTemplate.postForEntity(url, HttpModel.entity(user, MediaType.APPLICATION_JSON, Authorization), String.class);
     }
 
-    public void deleteUser(String userId) {
-        keyCloakConnection.deleteUser(userId);
+    public UserWID[] listUser(String Authorization) {
+        String url = constants.serverUrl + "/admin/realms/" + constants.realm + "/users";
+
+        return restTemplate.exchange(
+            url,
+            HttpMethod.GET,
+            HttpModel.entity(null, MediaType.APPLICATION_JSON, Authorization),
+            UserWID[].class
+        ).getBody();
     }
 
-    public void updateUser(User user) {
-        keyCloakConnection.updatePassword(user, user.getPassword());
+    public User getUser(String id, String Authorization) {
+        String url = constants.serverUrl + "/admin/realms/" + constants.realm + "/users/" + id;
+
+        return restTemplate.exchange(
+            url,
+            HttpMethod.GET,
+            HttpModel.entity(null, MediaType.APPLICATION_JSON, Authorization),
+            User.class
+        ).getBody();
     }
 
-    public UserRepresentation getUser(String userId) {
-        return keyCloakConnection.findUserById(userId);
+    public void updateUser(String id, User user, String Authorization) {
+        String url = constants.serverUrl + "/admin/realms/" + constants.realm + "/users/" + id;
+
+        restTemplate.exchange(
+            url,
+            HttpMethod.PUT,
+            HttpModel.entity(user, MediaType.APPLICATION_JSON, Authorization),
+            String.class
+        );
+
     }
 
-    public void authorize() {
-        keyCloakConnection.authorize();
+    public void updatePassword(String id, PasswordDTO password, String Authorization) {
+        String url = constants.serverUrl + "/admin/realms/" + constants.realm + "/users/" + id + "/reset-password";
+        PasswordUpdate passwordUpdate = new PasswordUpdate(password.getPassword());
+
+        restTemplate.exchange(
+                url,
+                HttpMethod.PUT,
+                HttpModel.entity(passwordUpdate, MediaType.APPLICATION_JSON, Authorization),
+                String.class
+        );
     }
+
+
+    public Boolean deleteUser(String id, String Authorization) {
+        Boolean wasDeleted = true;
+        try {
+        User user = getUser(id, Authorization);
+        user.setEnabled(false);
+
+        updateUser(id, user, Authorization);}
+        catch(Exception e){
+            wasDeleted = false;
+        }
+        return wasDeleted;
+    }
+
+
 }
