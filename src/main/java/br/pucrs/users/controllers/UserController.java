@@ -116,6 +116,9 @@ public class UserController {
             @RequestHeader String Authorization
     ) {
         Boolean response = userService.deleteUser(id, Authorization);
-        return ResponseEntity.ok(response ? "Deleted" : "Not_Deleted");
+        if(response)
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

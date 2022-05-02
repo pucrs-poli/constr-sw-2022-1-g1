@@ -75,7 +75,7 @@ public class UserService {
 
     public Boolean deleteUser(String id, String Authorization) {
         Boolean wasDeleted = true;
-        try{
+        try {
         User user = getUser(id, Authorization);
         user.setEnabled(false);
 
