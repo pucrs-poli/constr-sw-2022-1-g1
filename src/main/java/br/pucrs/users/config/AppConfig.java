@@ -1,6 +1,8 @@
 package br.pucrs.users.config;
 
 import lombok.Data;
+import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +28,7 @@ public class AppConfig {
     @Value("${keycloak.admin.password}")
     private String password;
 
-    @Value("${keycloak.server-url}")
+    @Value("${keycloak.auth-server-url}")
     private String serverUrl;
 
     @Value("${keycloak.realm}")
@@ -39,8 +41,13 @@ public class AppConfig {
                 .realm(realm)
                 .clientId("login-app")
                 .clientSecret("yjHaEaOOYs8JasHdKt3PCMv90dLETnDr")
+                .grantType(OAuth2Constants.PASSWORD)
                 .username("admin")
                 .password("admin")
+                .resteasyClient(new ResteasyClientBuilder()
+                        .connectionPoolSize(10)
+                        .build()
+                )
                 .build();
     }
 }

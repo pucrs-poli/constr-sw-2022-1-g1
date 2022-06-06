@@ -31,7 +31,6 @@ public class KeyCloakConnection {
         return keycloak.realm(appConfig.getRealm()).users().create(user);
     }
 
-
     public void deleteUser(final String id) {
         keycloak.realm(appConfig.getRealm()).users().delete(id);
     }

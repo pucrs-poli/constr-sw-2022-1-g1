@@ -18,6 +18,7 @@ public class UserController {
 
     @PostMapping(path = "/{realm}/users", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createUser(@RequestBody User user) {
+        System.out.println("entrou no controller");
         userService.createUser(user);
         return ResponseEntity.ok().build();
     }
