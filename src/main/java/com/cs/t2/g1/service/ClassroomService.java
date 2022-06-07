@@ -19,6 +19,14 @@ public class ClassroomService {
         return classroomRepository.save(classrooms);
     }
 
+    public Classrooms refreshClassroom(Classrooms classrooms, String classroomUuid , String buildingUuid) {
+        if(classroomRepository.findById(classroomUuid).isEmpty()) return null;
+
+        classrooms.setBuildingUuid(buildingUuid);
+        classrooms.setId(classroomUuid);
+        return classroomRepository.save(classrooms);
+    }
+
     public List<Classrooms> getClassrooms(String buildingUuid) {
         return classroomRepository.findAllByBuildingUuid(buildingUuid);
     }

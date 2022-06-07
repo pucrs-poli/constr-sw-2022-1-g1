@@ -13,7 +13,7 @@ public interface BuildingRepository extends MongoRepository<Building, String> {
     List<Building> findAllByEnabled(boolean enabled);
     Optional<Building> findById(String uuid);
     Building save(Building building);
-    void deleteBuildingById(String uuid);
+    void deleteById(String uuid);
 
     @Query("{id :?0}")
     Building getById(String id);

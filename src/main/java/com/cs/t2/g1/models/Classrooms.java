@@ -14,7 +14,6 @@ import org.springframework.data.mongodb.core.mapping.DocumentReference;
 public class Classrooms {
 
     @Id
-    @Setter(AccessLevel.NONE)
     private String id;
 
     private int classroomNumber;

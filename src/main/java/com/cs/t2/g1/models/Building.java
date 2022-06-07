@@ -21,7 +21,6 @@ import java.util.List;
 public class Building {
 
     @Id
-    @Setter(AccessLevel.NONE)
     private String id;
 
     @Indexed(unique=true)

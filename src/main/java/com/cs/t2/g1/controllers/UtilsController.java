@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 
-@RestController("/admin")
+@RestController()
 public class UtilsController {
 
     @Autowired
@@ -56,7 +56,7 @@ public class UtilsController {
                         "                    yxx),M(E),M(E.xxy))-M(E-E));z=.3;G(30)z=min(z\n" +
                         "                     ,M(L*(t+=2.))/t);o=mix(o,.4*(Y*max(z+z,0.)\n" +
                         "                         +Y).grbb+pow(max (dot(reflect(L,u),d\n" +
-                        "                              ),0.),1e3),-dot(u,d));}}" +
+                        "                              ),0.),1e3),-dot(u,d));}}\n" +
                         " At this course, we learned to not use byte typing on our projects. Grateful we will pass.",
                 HttpStatus.I_AM_A_TEAPOT
         );
