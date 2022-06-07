@@ -16,11 +16,13 @@ public class Classrooms {
     @Id
     private String id;
 
-    private int classroomNumber;
-    private int capacity;
-    private boolean enabled;
+    private Integer classroomNumber;
+    private String classroomName;
+    private Integer capacity;
+    private Boolean enabled;
 
     private String buildingUuid;
+
 
     public Classrooms() {
         this.id = UUIDHandler.generateUuid();

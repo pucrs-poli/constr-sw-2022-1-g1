@@ -1,8 +1,6 @@
 package com.cs.t2.g1.controllers;
 
 import com.cs.t2.g1.models.Building;
-import com.cs.t2.g1.models.BuildingDTO;
-import com.cs.t2.g1.models.Classrooms;
 import com.cs.t2.g1.service.BuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -79,7 +77,22 @@ public class BuildingController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    public ResponseEntity refreshClassroom(
+    public ResponseEntity updateBuilding(
+            @RequestBody Building building,
+            @PathVariable("buildingUuid") String buildingUuid
+    ) {
+        if (buildingService.updateBuilding(building, buildingUuid) != null)
+            return new ResponseEntity<>(HttpStatus.OK);
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PatchMapping(
+            value = "/buildings/{buildingUuid}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public ResponseEntity refreshBuilding(
             @RequestBody Building building,
             @PathVariable("buildingUuid") String buildingUuid
     ) {
@@ -88,6 +101,5 @@ public class BuildingController {
         else
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
 
 }

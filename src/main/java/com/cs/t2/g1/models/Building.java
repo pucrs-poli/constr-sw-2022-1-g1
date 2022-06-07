@@ -24,9 +24,12 @@ public class Building {
     private String id;
 
     @Indexed(unique=true)
-    @Setter(AccessLevel.NONE)
-    private byte buildingNumber;
-    private boolean enabled;
+    private Integer buildingNumber;
+
+    private Boolean enabled;
+
+    private String buildingName;
+    private String buildingDescription;
 
     @DBRef
     @DocumentReference(lookup="{'buildingUuid':?#{#self._id} }")

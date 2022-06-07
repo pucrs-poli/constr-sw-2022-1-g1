@@ -19,12 +19,31 @@ public class ClassroomService {
         return classroomRepository.save(classrooms);
     }
 
-    public Classrooms refreshClassroom(Classrooms classrooms, String classroomUuid , String buildingUuid) {
+    public Classrooms updateClassroom(Classrooms classrooms, String classroomUuid , String buildingUuid) {
         if(classroomRepository.findById(classroomUuid).isEmpty()) return null;
 
         classrooms.setBuildingUuid(buildingUuid);
         classrooms.setId(classroomUuid);
         return classroomRepository.save(classrooms);
+    }
+
+    public Classrooms refreshClassroom(Classrooms classroomsPatch, String classroomUuid , String buildingUuid) {
+        Classrooms classroom = classroomRepository.findById(classroomUuid).orElse(null);
+        if(classroom == null)return null;
+        if(!classroom.getBuildingUuid().equals(buildingUuid)) return null;
+
+        if (classroomsPatch.getClassroomNumber() != null)
+            classroom.setClassroomNumber(classroomsPatch.getClassroomNumber());
+        if (classroomsPatch.getClassroomName() != null)
+            classroom.setClassroomName(classroomsPatch.getClassroomName());
+        if (classroomsPatch.getCapacity() != null)
+            classroom.setCapacity(classroomsPatch.getCapacity());
+        if (classroomsPatch.getEnabled() != null)
+            classroom.setEnabled(classroomsPatch.getEnabled());
+        if (classroomsPatch.getBuildingUuid() != null)
+            classroom.setBuildingUuid(classroomsPatch.getBuildingUuid());
+
+        return classroomRepository.save(classroom);
     }
 
     public List<Classrooms> getClassrooms(String buildingUuid) {

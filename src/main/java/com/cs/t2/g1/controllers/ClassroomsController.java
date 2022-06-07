@@ -77,6 +77,22 @@ public class ClassroomsController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
+    public ResponseEntity updateClassroom(
+            @RequestBody Classrooms classroom,
+            @PathVariable("buildingUuid") String buildingUuid,
+            @PathVariable("classroomUuid") String classroomUuid
+    ) {
+        if (classroomService.updateClassroom(classroom, classroomUuid, buildingUuid) != null)
+            return new ResponseEntity<>(HttpStatus.OK);
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PatchMapping(
+            value = "/buildings/{buildingUuid}/classrooms/{classroomUuid}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
     public ResponseEntity refreshClassroom(
             @RequestBody Classrooms classroom,
             @PathVariable("buildingUuid") String buildingUuid,

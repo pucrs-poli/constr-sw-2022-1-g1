@@ -1,7 +1,6 @@
 package com.cs.t2.g1.service;
 
 import com.cs.t2.g1.models.Building;
-import com.cs.t2.g1.models.BuildingDTO;
 import com.cs.t2.g1.repository.BuildingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,9 +16,29 @@ public class BuildingService {
     public Building saveBuilding(Building building) {
         return buildingRepository.save(building);
     }
-    public Building refreshBuilding(Building building, String buildingUuid) {
+    public Building updateBuilding(Building building, String buildingUuid) {
         if(buildingRepository.getById(buildingUuid) == null) return null;
         building.setId(buildingUuid);
+        return buildingRepository.save(building);
+    }
+
+    public Building refreshBuilding(Building buildingPatch, String buildingUuid) {
+        Building building = buildingRepository.getById(buildingUuid);
+        if(building == null) return null;
+
+        if(buildingPatch.getBuildingName() != null)
+            building.setBuildingName(buildingPatch.getBuildingName());
+
+        if(buildingPatch.getBuildingDescription() != null)
+            building.setBuildingDescription(buildingPatch.getBuildingDescription());
+
+        if(buildingPatch.getBuildingNumber() != null)
+            building.setBuildingNumber(buildingPatch.getBuildingNumber());
+
+        if(buildingPatch.getEnabled() != null)
+            building.setEnabled(buildingPatch.getEnabled());
+
+
         return buildingRepository.save(building);
     }
 
