@@ -2,16 +2,15 @@ package com.cs.t2.g1.controllers;
 
 import com.cs.t2.g1.models.Building;
 import com.cs.t2.g1.models.Classrooms;
+import com.cs.t2.g1.models.DTO.UtilsDTO;
 import com.cs.t2.g1.repository.BuildingRepository;
 import com.cs.t2.g1.repository.ClassroomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,7 +24,8 @@ public class UtilsController {
     @Autowired
     private ClassroomRepository classroomRepository;
 
-
+    @Value("${utils.security.token}")
+    private String token;
 
 
     @GetMapping(
@@ -69,7 +69,8 @@ public class UtilsController {
             value = "/cleardb",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    public ResponseEntity cleardb() {
+    public ResponseEntity cleardb(@RequestBody UtilsDTO body) {
+        if(!body.getToken().equals(token)) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
         List<Building> buildings = buildingRepository.findAll();
         List<Classrooms> classrooms = classroomRepository.findAll();

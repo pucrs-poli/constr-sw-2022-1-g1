@@ -58,7 +58,6 @@ public class ClassroomsController {
             dclassroom = classroomService.saveClassroom(classroom, buildingUuid);
         } catch (Exception e) {
             System.out.println(e.getClass());
-            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(dclassroom, HttpStatus.CREATED);

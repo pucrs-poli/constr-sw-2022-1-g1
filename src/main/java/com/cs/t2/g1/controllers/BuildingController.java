@@ -27,7 +27,6 @@ public class BuildingController {
             dbuilding = buildingService.saveBuilding(building);
         } catch (Exception e) {
             System.out.println(e.getClass());
-            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(dbuilding, HttpStatus.CREATED);
