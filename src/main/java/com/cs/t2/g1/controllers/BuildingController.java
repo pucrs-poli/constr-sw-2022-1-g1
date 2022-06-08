@@ -50,11 +50,13 @@ public class BuildingController {
     }
 
     @GetMapping(
-            value = "/buildings2",
+            value = "/buildings/query",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    public ResponseEntity<List<Building>> getBuildings2() {
-        List<Building> building = buildingService.getBuildings();
+    public ResponseEntity<Building> getBuildings2(@RequestParam("uuid") String uuid) {
+        Building building = buildingService.getBuildingWithQuery(uuid);
+        if(building == null)
+            return ResponseEntity.notFound().build();
         return ResponseEntity.ok(building);
     }
 

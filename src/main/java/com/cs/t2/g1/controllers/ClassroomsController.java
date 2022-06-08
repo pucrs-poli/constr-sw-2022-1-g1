@@ -26,12 +26,12 @@ public class ClassroomsController {
     }
 
     @GetMapping(
-            value = "/buildings/{buildingUuid}/classrooms2",
+            value = "/buildings/classrooms/query",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    public ResponseEntity<List<Classrooms>> getClassroomsByBuildingNumber(@PathVariable("buildingUuid") String buildingUuid) {
+    public ResponseEntity<List<Classrooms>> getClassroomsByBuildingNumber(@RequestParam("uuid") String buildingUuid) {
         List<Classrooms> classrooms = classroomService.getClassroomsByBuildingUuid(buildingUuid);
-        return ResponseEntity.ok(classrooms);
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping(

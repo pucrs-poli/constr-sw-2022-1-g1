@@ -58,4 +58,8 @@ public class BuildingService {
     public Building getBuilding(String uuid) {
         return buildingRepository.findById(uuid).orElse(null);
     }
+
+    public Building getBuildingWithQuery(String uuid) {
+        return buildingRepository.getById(uuid);
+    }
 }
