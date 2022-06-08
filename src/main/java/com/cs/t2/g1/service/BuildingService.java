@@ -6,6 +6,7 @@ import com.cs.t2.g1.repository.BuildingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -13,15 +14,20 @@ public class BuildingService {
 
     @Autowired
     private BuildingRepository buildingRepository;
+    @Autowired
+    private ClassroomService classroomService;
 
     public Building saveBuilding(Building building) {
         List<Classrooms> classrooms = building.getClassrooms();
         String buildingUuid = building.getId();
 
-        for(Classrooms classroom : classrooms)
-            classroom.setBuildingUuid(buildingUuid);
+        building.setClassrooms(null);
+        Building build = buildingRepository.save(building);
 
-        return buildingRepository.save(building);
+        for(Classrooms classroom : classrooms)
+            classroomService.saveClassroom(classroom, buildingUuid);
+
+        return buildingRepository.getById(buildingUuid);
     }
     public Building updateBuilding(Building building, String buildingUuid) {
         if(buildingRepository.getById(buildingUuid) == null) return null;

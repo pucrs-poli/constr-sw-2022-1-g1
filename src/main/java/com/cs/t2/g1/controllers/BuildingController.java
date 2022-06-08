@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController("/buildings")
@@ -24,7 +25,6 @@ public class BuildingController {
     )
     public ResponseEntity saveBuilding(@RequestBody Building building) {
         Building dbuilding = null;
-
         try {
             dbuilding = buildingService.saveBuilding(building);
         } catch (Exception e) {
