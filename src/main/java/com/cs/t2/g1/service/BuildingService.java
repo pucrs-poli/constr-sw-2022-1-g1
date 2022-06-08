@@ -1,6 +1,7 @@
 package com.cs.t2.g1.service;
 
 import com.cs.t2.g1.models.Building;
+import com.cs.t2.g1.models.Classrooms;
 import com.cs.t2.g1.repository.BuildingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,12 @@ public class BuildingService {
     private BuildingRepository buildingRepository;
 
     public Building saveBuilding(Building building) {
+        List<Classrooms> classrooms = building.getClassrooms();
+        String buildingUuid = building.getId();
+
+        for(Classrooms classroom : classrooms)
+            classroom.setBuildingUuid(buildingUuid);
+
         return buildingRepository.save(building);
     }
     public Building updateBuilding(Building building, String buildingUuid) {
