@@ -34,7 +34,7 @@ public class UtilsController {
     )
     public ResponseEntity greetings() {
         return new ResponseEntity(
-                "\n" +
+                        "\n" +
                         "                                    float K,a,t\n" +
                         "                                      ,z=0.;W\n" +
                         "                                        P,O; \n" +
@@ -58,7 +58,8 @@ public class UtilsController {
                         "                     ,M(L*(t+=2.))/t);o=mix(o,.4*(Y*max(z+z,0.)\n" +
                         "                         +Y).grbb+pow(max (dot(reflect(L,u),d\n" +
                         "                              ),0.),1e3),-dot(u,d));}}\n" +
-                        " At this course, we learned to not use byte typing on our projects. Grateful we will pass.",
+                        " At this course, we learned to not use byte typing on our projects. Grateful we will pass.\n" +
+                        " Team 1: Buildings and classrooms;\n",
                 HttpStatus.I_AM_A_TEAPOT
         );
     }
