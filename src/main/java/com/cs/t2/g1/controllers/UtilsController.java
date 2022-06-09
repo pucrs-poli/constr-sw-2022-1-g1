@@ -76,11 +76,13 @@ public class UtilsController {
         List<Classrooms> classrooms = classroomRepository.findAll();
 
         try {
-            for (Classrooms classroom : classrooms)
-                classroomRepository.deleteById(classroom.getId());
-            for (Building building : buildings)
-                buildingRepository.deleteById(building.getId());
-        } catch (Exception ignore) {
+            if(!buildings.isEmpty())
+                for (Building building : buildings)
+                    buildingRepository.deleteById(building.getId());
+            if(!classrooms.isEmpty())
+                for (Classrooms classroom : classrooms)
+                    classroomRepository.deleteById(classroom.getId());
+        } catch (Exception ignored) {
             System.out.println("Missed deletion line");
         }
 

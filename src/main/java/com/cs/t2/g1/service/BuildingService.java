@@ -22,13 +22,15 @@ public class BuildingService {
         String buildingUuid = building.getId();
 
         building.setClassrooms(null);
-        Building build = buildingRepository.save(building);
+        buildingRepository.save(building);
 
-        for(Classrooms classroom : classrooms)
-            classroomService.saveClassroom(classroom, buildingUuid);
+        if(classrooms != null)
+            for(Classrooms classroom : classrooms)
+                classroomService.saveClassroom(classroom, buildingUuid);
 
         return buildingRepository.getById(buildingUuid);
     }
+
     public Building updateBuilding(Building building, String buildingUuid) {
         if(buildingRepository.getById(buildingUuid) == null) return null;
         building.setId(buildingUuid);
