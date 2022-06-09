@@ -75,11 +75,14 @@ public class UtilsController {
         List<Building> buildings = buildingRepository.findAll();
         List<Classrooms> classrooms = classroomRepository.findAll();
 
-        for (Classrooms classroom : classrooms)
-            classroomRepository.deleteById(classroom.getId());
-
-        for (Building building : buildings)
-            buildingRepository.deleteById(building.getId());
+        try {
+            for (Classrooms classroom : classrooms)
+                classroomRepository.deleteById(classroom.getId());
+            for (Building building : buildings)
+                buildingRepository.deleteById(building.getId());
+        } catch (Exception ignore) {
+            System.out.println("Missed deletion line");
+        }
 
         return ResponseEntity.ok().build();
     }
